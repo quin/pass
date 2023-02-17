@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.heart-container {
+  background-color: black;
+  color: grey;
+  width: 100px;
+
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}

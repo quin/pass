@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# Passes Frontend Take Home
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This interview is designed to test frontend engineering basics. Please complete
+it within one and a half hours. The use of google is allowed. Please read through
+this entire readme before beginning.
 
-## Available Scripts
+## Goal
 
-In the project directory, you can run:
+Our goal is to create a like button like so:
 
-### `npm start`
+![design](design.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The functionality should be as follows:
+- When the button is loaded:
+  - If the user has not liked it then show an empty heart icon
+  - If the user has liked it then show the heart icon filled with red
+  - Display the current number of likes
+    - If the count is greater than `999` this amount should be represented in
+      thousands
+      - e.g. `1,459` likes should be displayed as `1.4K`
+- When the button is clicked:
+  - If the heart is empty (not liked) then fill the heart with red
+  - If the heart is filled (liked) then remove the red from the heart
+  - The count displayed next to the button is incremented/decremented
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Please create a React component to support these features.**
 
-### `npm test`
+## Backend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To facilitate this functionality, we have the following backend APIs:
+- `GET  /api/v1/like/:likeId/count` - Returns the number of likes
+- `GET  /api/v1/like/:likeId/user/:userId` - Returns a boolean indicating if the
+  user has liked the button
+- `POST /api/v1/like/add` - Adds a like
+- `POST /api/v1/like/remove` - Removes the like
 
-### `npm run build`
+Both `POST` endpoints expect a request body with fields `likeId` and `userId`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+For testing we have provided a simple server `server.js`. You can run it like so:
+```bash
+# in a terminal window
+node server.js
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# in another window (example usage)
+curl -X POST --data '{"likeId": "123", "userId": "aaron"}' localhost:3001/api/v1/like/add
+curl -X POST --data '{"likeId": "123", "userId": "lucy"}' localhost:3001/api/v1/like/add
+curl -X GET localhost:3001/api/v1/like/123/count
+{"data":2}
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The server will seamlessly handles new likes and users. No need to "create" a
+like or user. Also, note that the storage is in memory, so if you spin down the
+server you will lose any existing data.
 
-### `npm run eject`
+## Additional Info
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Other notes/requirements:
+- Use the included `heart-icon.svg` as the heart
+- Do not add any dependencies other than `axios` (optional, `fetch` is fine)
+- Don't worry about using actually IDs, you can provide arbitrary mock values
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Bonuses
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+These bonus questions are optional. If you would like to complete them and are
+running out of time feel free to submit the main question and provide a second
+submission with the bonuses.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Bonus #1
 
-## Learn More
+Ensure that if a user rapidly clicks the like button it only results in one API
+call after they pause clicking for more than 300ms. The UI should be updated
+optimistically regardless of whether or not the API call has been made.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Bonus #2
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Add animation and styling at your discretion. Use the Twitter like button for
+inspiration.
